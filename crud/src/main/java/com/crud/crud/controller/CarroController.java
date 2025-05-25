@@ -3,6 +3,8 @@ package com.crud.crud.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,27 +24,52 @@ public class CarroController {
     private CarroService carroService;
 
     @PostMapping("/save")
-    public String save(@RequestBody Carro carro){
-        return "Carro salvo com sucesso!";
+    public ResponseEntity<String> save(@RequestBody Carro carro){
+        try {
+            String mensagem = this.carroService.save(carro);
+            return new ResponseEntity<>(mensagem, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/update/{id}")  
-    public String update(@RequestBody Carro carro, @PathVariable long id){
-        return "carro foi atualizado com sucesso";
+    public ResponseEntity<String> update(@RequestBody Carro carro, @PathVariable long id){
+        try {
+            String mensagem = this.carroService.update(carro, id);
+            return new ResponseEntity<>(mensagem, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/delete/{id}")
-    public String delete (@PathVariable Long id) {
-        return "carro deletado";
+    public ResponseEntity<String> delete (@PathVariable Long id) {
+        try {
+            String mensagem = this.carroService.delete(id);
+            return new ResponseEntity<>(mensagem, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/findAll")
-    public List<Carro> findAll(){
-        return null;
+    public ResponseEntity<List<Carro>> findAll(){
+        try {
+            List<Carro> lista = this.carroService.findAll();
+            return new ResponseEntity<>(lista, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/findById/{id}")
-    public Carro findById(@PathVariable Long id){
-        return null;
+    public ResponseEntity<Carro> findById(@PathVariable Long id){
+        try {
+            Carro carro = this.carroService.findById(id);
+            return new ResponseEntity<>(carro, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 }
